@@ -1,0 +1,47 @@
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: mern.example.com              #your frontend domain here
+      paths:
+        - path: /
+          pathType: Prefix
+          service:
+            name: frontend
+            port: 80
+        - path: /api                     #your backend api route
+          pathType: Prefix
+          service:
+            name: backend
+            port: 5000
+  tls:
+    - secretName: mern-tls
+      hosts:
+        - mern.example.com
+
+frontend:
+  image: my-dockerhub/mern-frontend       #insert your dockerhub-frontend repo
+  tag: latest
+  replicas: 2
+  service:
+    type: ClusterIP              #LoadBalancer will create a public IP Address to the frontend which can be added in your domain's DNS record
+    port: 80
+
+backend:
+  image: my-dockerhub/mern-backend        #insert your dockerhub-backend repo
+  tag: latest
+  replicas: 2
+  service:
+    type: ClusterIP                  #this will create a cluster IP Address using which the pod svc will communicate each other. 
+    port: 5000
+
+mongodb:
+  image: mongo
+  tag: 6.0
+  replicas: 1
+  service:
+    type: ClusterIP
+    port: 27017
+  persistence:
+    enabled: true
+    size: 1Gi                         #Persistence volume taken from the class storage

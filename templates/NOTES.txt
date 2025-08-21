@@ -1,0 +1,46 @@
+## Components Managed by Helm
+1. Frontend (React + Nginx)
+   - Deployment
+   - Service (ClusterIP / LoadBalancer)
+2. Backend (Node.js / Express)
+   - Deployment
+   - Service (ClusterIP)
+3. MongoDB
+   - StatefulSet / Deployment
+   - Service (ClusterIP, internal only)
+   - PersistentVolumeClaim
+4. Ingress
+   - Routes external traffic to frontend and backend
+   - TLS supported via secret (mern-tls)
+
+## Helm Values (values.yaml)
+- image.repository: Set image repo (e.g., Docker Hub)
+- image.tag: Docker image tag
+- service.type: ClusterIP / LoadBalancer
+- ingress.enabled: true/false
+- ingress.hosts: Configure domain + path
+- ingress.tls: Provide TLS secret name + hosts
+
+## Commands
+# Install / Upgrade Release
+helm install mern ./mern-app -f values.yaml
+helm upgrade mern ./mern-app -f values.yaml
+
+# Check Release
+helm list
+helm status mern
+
+# Uninstall
+helm uninstall mern
+
+# Dry Run for Debugging
+helm install mern ./mern-app -f values.yaml --dry-run --debug
+
+## NGINX Ingress Controller
+- Required before using ingress
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm install ingress-nginx ingress-nginx/ingress-nginx
+
+## Cert-Manager (Optional, for auto TLS)
+helm repo add jetstack https://charts.jetstack.io
+helm install cert-manager jetstack/cert-manager --set installCRDs=true
