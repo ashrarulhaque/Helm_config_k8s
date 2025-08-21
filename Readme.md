@@ -50,9 +50,9 @@ mern-app/
 
 ```mermaid
 flowchart TD
-    A[User Browser] --> B[Ingress Controller (NGINX)]
-    B --> C[Frontend Service (React + Nginx)]
-    B --> D[Backend Service (Node.js + Express)]
+    A[User Browser] --> B[Ingress Controller]
+    B --> C[Frontend Service]
+    B --> D[Backend Service]
     D --> E[(MongoDB StatefulSet + PVC)]
 ```
 
@@ -63,14 +63,6 @@ flowchart TD
 * React frontend → `https://mern.example.com/`
 * Node backend → `https://mern.example.com/api`
 * MongoDB → Internal only (ClusterIP)
-
----
-
-## 🗑️ Uninstall
-
-```bash
-helm uninstall mern
-```
 
 ---
 
